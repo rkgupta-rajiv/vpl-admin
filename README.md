@@ -15,8 +15,8 @@ php artisan serve --host=0.0.0.0 --port=8000
 ```
 Optional demo data (12 players, 10 registrations): `php artisan db:seed --class=DemoPlayersSeeder`
 
-**Main Admin login:** `/admin` → `admin@vpl.local` / `Admin@12345` (set `ADMIN_EMAIL` / `ADMIN_PASSWORD` in `.env` before seeding, and change the password under Settings).
-Forgot admin password: `php artisan vpl:admin admin@vpl.local --password="New@12345"`
+**Main Admin login:** `/admin` → `admin@admin.com` / `admin123` (set `ADMIN_EMAIL` / `ADMIN_PASSWORD` in `.env` before seeding, and change the password under Settings).
+Forgot admin password: `php artisan vpl:admin admin@admin.com --password="New@12345"`
 
 ## Production checklist
 - `APP_ENV=production`, `APP_DEBUG=false`, HTTPS only, `APP_URL=https://your-domain`.

@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         // Main Admin (Super Admin) — change the password after first login!
         User::updateOrCreate(
-            ['email' => strtolower(env('ADMIN_EMAIL', 'admin@vpl.local'))],
-            ['name' => env('ADMIN_NAME', 'Main Admin'), 'password' => env('ADMIN_PASSWORD', 'Admin@12345'), 'role' => User::ROLE_SUPER_ADMIN, 'is_active' => true]
+            ['email' => strtolower(env('ADMIN_EMAIL', 'admin@admin.com'))],
+            ['name' => env('ADMIN_NAME', 'Main Admin'), 'password' => env('ADMIN_PASSWORD', 'admin123'), 'role' => User::ROLE_SUPER_ADMIN, 'is_active' => true]
         );
 
         Setting::put(Setting::DEFAULTS);
