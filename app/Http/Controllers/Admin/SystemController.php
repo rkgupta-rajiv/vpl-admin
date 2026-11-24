@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
+use App\Models\PaymentSetting;
 use App\Models\Setting;
 use App\Models\StatusHistory;
 use App\Support\AdminContext;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 
 /** Application settings, admin password, activity log and approval history. */
@@ -15,7 +17,37 @@ class SystemController extends Controller
 {
     public function settings()
     {
-        return view('admin.settings', ['s' => collect(Setting::DEFAULTS)->mapWithKeys(fn ($v, $k) => [$k => Setting::get($k)])]);
+        $tournament = AdminContext::tournament();
+        $payment = $tournament ? ($tournament->paymentSetting ?? PaymentSetting::create(['tournament_id' => $tournament->id])) : null;
+
+        return view('admin.settings', [
+            's' => collect(Setting::DEFAULTS)->mapWithKeys(fn ($v, $k) => [$k => Setting::get($k)]),
+            'tournament' => $tournament,
+            'payment' => $payment,
+        ]);
+    }
+
+    /** Upload / replace / remove the payment QR image shown on the player's payment page. */
+    public function updateQr(Request $request)
+    {
+        $tournament = AdminContext::tournament();
+        abort_unless($tournament, 404, 'Create a tournament first.');
+        $request->validate([
+            'qr_code' => ['nullable', 'required_without:remove_qr', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'remove_qr' => ['boolean'],
+        ]);
+        $setting = $tournament->paymentSetting ?? PaymentSetting::create(['tournament_id' => $tournament->id]);
+        if (($request->boolean('remove_qr') || $request->hasFile('qr_code')) && $setting->qr_code_path) {
+            Storage::disk('public')->delete($setting->qr_code_path);
+            $setting->qr_code_path = null;
+        }
+        if ($request->hasFile('qr_code')) {
+            $setting->qr_code_path = $request->file('qr_code')->store('qr-codes', 'public');
+        }
+        $setting->save();
+        ActivityLog::log('payment_settings.qr_updated', 'Updated payment QR for '.$tournament->title, $tournament);
+
+        return back()->with('success', $setting->qr_code_path ? 'QR code saved. Players will see it on the payment page.' : 'QR code removed.');
     }
 
     public function updateSettings(Request $request)

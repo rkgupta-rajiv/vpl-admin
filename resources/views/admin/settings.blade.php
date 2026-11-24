@@ -26,5 +26,24 @@
             </div>
         </x-card>
     </form>
+    <form method="POST" action="{{ route('admin.settings.qr') }}" enctype="multipart/form-data">@csrf
+        <x-card title="Payment QR code{{ $tournament ? ' · '.$tournament->title : '' }}">
+            @if(!$tournament)
+                <p class="text-sm text-slate-500">Create a tournament first, then upload its QR here.</p>
+            @else
+                @if($payment->qr_code_path)
+                    <img src="{{ $payment->qrCodeUrl() }}" class="mx-auto mb-3 w-52 rounded-xl border border-slate-200 p-2" alt="QR">
+                    <label class="mb-3 flex items-center gap-2 text-sm text-rose-600"><input type="checkbox" name="remove_qr" value="1" class="rounded"> Remove current QR</label>
+                @else
+                    <div class="mb-3 grid h-40 place-items-center rounded-xl border-2 border-dashed border-slate-200 text-sm text-slate-400">No QR uploaded</div>
+                @endif
+                <label class="label">{{ $payment->qr_code_path ? 'Replace' : 'Upload' }} QR photo (PNG/JPG/WebP, up to 4 MB)</label>
+                <input type="file" name="qr_code" accept="image/png,image/jpeg,image/webp" class="field">
+                @error('qr_code')<p class="mt-1 text-xs text-rose-600">{{ $message }}</p>@enderror
+                <p class="mt-3 text-xs text-slate-500">Shown automatically on every player's payment screen in the app.</p>
+                <button class="btn btn-primary mt-3">Save QR code</button>
+            @endif
+        </x-card>
+    </form>
 </div>
 @endsection

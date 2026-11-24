@@ -61,6 +61,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('activity', [SystemController::class, 'activity'])->name('activity');
         Route::get('settings', [SystemController::class, 'settings'])->name('settings');
         Route::put('settings', [SystemController::class, 'updateSettings'])->name('settings.update');
+        Route::post('settings/qr', [SystemController::class, 'updateQr'])->name('settings.qr');
         Route::put('settings/password', [SystemController::class, 'updatePassword'])->name('settings.password');
     });
 });
