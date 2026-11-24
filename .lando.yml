@@ -16,6 +16,7 @@ services:
     overrides:
       environment:
         # Real env vars win over .env, so the app always talks to Lando's DB.
+        COMPOSER_NO_SECURITY_BLOCKING: '1'
         APP_URL: https://vpl-admin.lndo.site
         DB_CONNECTION: mysql
         DB_HOST: database
