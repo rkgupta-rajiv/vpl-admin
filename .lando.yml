@@ -1,0 +1,51 @@
+name: vpl-admin
+recipe: laravel
+config:
+  php: '8.3'
+  via: nginx
+  webroot: public
+  database: mysql:8.0
+  composer_version: '2'
+  cache: none
+  xdebug: false
+
+services:
+  appserver:
+    build:
+      - composer install --no-interaction
+    overrides:
+      environment:
+        # Real env vars win over .env, so the app always talks to Lando's DB.
+        APP_URL: https://vpl-admin.lndo.site
+        DB_CONNECTION: mysql
+        DB_HOST: database
+        DB_PORT: '3306'
+        DB_DATABASE: laravel
+        DB_USERNAME: laravel
+        DB_PASSWORD: laravel
+  node:
+    type: node:20
+    build:
+      - npm install
+
+tooling:
+  npm:
+    service: node
+  node:
+    service: node
+  vpl-setup:
+    service: appserver
+    description: First-time setup (.env, key, migrate + seed, storage link)
+    cmd:
+      - test -f .env || cp .env.example .env
+      - php artisan key:generate --force
+      - php artisan migrate --seed --force
+      - php artisan storage:link
+  fresh:
+    service: appserver
+    description: Drop all tables, re-migrate and seed
+    cmd: php artisan migrate:fresh --seed --force
+
+proxy:
+  appserver_nginx:
+    - vpl-admin.lndo.site
