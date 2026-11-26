@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') · {{ \App\Models\Setting::get('app_name') }} Admin</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}?v={{ @filemtime(public_path('css/admin.css')) }}">
     <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -30,7 +31,7 @@
     {{-- Sidebar --}}
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 -translate-x-full bg-pitch-950 text-pitch-100 transition-transform lg:static lg:translate-x-0">
         <div class="flex h-16 items-center gap-3 border-b border-white/10 px-5">
-            <div class="grid h-9 w-9 place-items-center rounded-full bg-red-600 shadow-inner ring-2 ring-white/20"><span class="h-full w-0.5 bg-white/70"></span></div>
+            <img src="{{ asset('images/vpl-logo.png') }}" alt="VPL" style="width:40px;height:40px">
             <div>
                 <div class="text-sm font-bold text-white">{{ \App\Models\Setting::get('app_name') }}</div>
                 <div class="text-[11px] text-pitch-100/60">Main Admin</div>
