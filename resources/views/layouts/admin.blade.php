@@ -75,6 +75,7 @@
             </button>
             <h1 class="truncate text-lg font-bold text-slate-900">@yield('title', 'Dashboard')</h1>
             <div class="ml-auto flex items-center gap-2">
+                <a href="{{ url('app') }}/?install=1" target="_blank" rel="noopener" class="btn btn-gold whitespace-nowrap" title="Install the player app (PWA)">⬇ Download App</a>
                 @if($allT->count())
                 <form method="POST" action="{{ route('admin.switch-tournament') }}">
                     @csrf

@@ -2,6 +2,17 @@
 @section('title', 'Dashboard')
 @php use App\Models\Player; $inr = fn($v) => '₹'.number_format($v, 0); @endphp
 @section('content')
+@php $appLink = url('app').'/?install=1'; @endphp
+<x-card title="Player app download">
+    <p class="mb-3 text-sm text-slate-600">Share this link with players. It works on iPhone, Android and computers: open it, then install the app to the home screen.</p>
+    <div class="flex flex-wrap items-center gap-2">
+        <input id="app-link" value="{{ $appLink }}" readonly class="field !w-auto min-w-0 flex-1" onclick="this.select()">
+        <button type="button" class="btn btn-light" onclick="var b=this,i=document.getElementById('app-link');i.select();(navigator.clipboard?navigator.clipboard.writeText(i.value):Promise.resolve(document.execCommand('copy'))).then(function(){b.textContent='Copied ✓'})">Copy link</button>
+        <a href="https://wa.me/?text={{ rawurlencode('Install the VPL player app: '.$appLink) }}" target="_blank" rel="noopener" class="btn btn-light">Share on WhatsApp</a>
+        <a href="{{ $appLink }}" target="_blank" rel="noopener" class="btn btn-primary">⬇ Download app</a>
+    </div>
+    <p class="mt-3 text-xs text-slate-500">Android users can also <a class="font-semibold underline" href="https://github.com/rkgupta-rajiv/vpl-flutter/releases/download/latest/vpl-player.apk">download the APK</a>.</p>
+</x-card>
 @if($t)
 <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-pitch-900 to-pitch-700 p-6 text-white shadow">
     <div class="seam absolute inset-y-0 right-24 w-10 opacity-60"></div>
